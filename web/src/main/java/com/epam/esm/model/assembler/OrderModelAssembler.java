@@ -1,13 +1,13 @@
 package com.epam.esm.model.assembler;
 
 import com.epam.esm.controller.GiftCertificateController;
-import com.epam.esm.controller.UserController;
+import com.epam.esm.controller.AccountController;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.Account;
 import com.epam.esm.model.GiftCertificateModel;
 import com.epam.esm.model.OrderModel;
-import com.epam.esm.model.UserModel;
+import com.epam.esm.model.AccountModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class OrderModelAssembler extends RepresentationModelAssemblerSupport<Order, OrderModel> {
 
     public OrderModelAssembler() {
-        super(UserController.class, OrderModel.class);
+        super(AccountController.class, OrderModel.class);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class OrderModelAssembler extends RepresentationModelAssemblerSupport<Ord
         orderModel.setId(order.getId());
         orderModel.setOrderDate(order.getOrderDate());
         orderModel.setOrderCost(order.getOrderCost());
-        orderModel.setUserModel(toUserModel(order.getUser()));
+        orderModel.setAccountModel(toAccountModel(order.getAccount()));
         orderModel.setCertificate(toGiftCertificateModel(order.getCertificate()));
 
         return orderModel;
@@ -51,12 +51,12 @@ public class OrderModelAssembler extends RepresentationModelAssemblerSupport<Ord
                         methodOn(GiftCertificateController.class).getGiftCertificate(certificate.getId())).withSelfRel());
     }
 
-    private UserModel toUserModel(User user) {
-        return UserModel.builder()
-                .id(user.getId())
-                .name(user.getName())
+    private AccountModel toAccountModel(Account account) {
+        return AccountModel.builder()
+                .id(account.getId())
+                .userId(account.getUserId())
                 .build()
                 .add(linkTo(
-                        methodOn(UserController.class).findAll(null)).withSelfRel());
+                        methodOn(AccountController.class).findAll(null)).withSelfRel());
     }
 }

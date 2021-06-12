@@ -10,9 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Set;
 
 @RestController
@@ -36,7 +36,6 @@ public class GiftCertificateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Long save(@RequestBody GiftCertificateDto dto) {
         return service.save(dto);
     }
@@ -49,13 +48,13 @@ public class GiftCertificateController {
     }
 
     @PatchMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RolesAllowed("ADMIN")
     public GiftCertificateModel update(@RequestBody GiftCertificateDto dto) {
         return giftCertificateModelAssembler.toModel(service.update(dto));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RolesAllowed("ADMIN")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteGiftCertificate(@PathVariable Long id) {
         service.delete(id);

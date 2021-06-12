@@ -20,6 +20,6 @@ public class OrderModel extends RepresentationModel<OrderModel> {
     private Long id;
     private LocalDateTime orderDate;
     private BigDecimal orderCost;
-    private UserModel userModel;
+    private AccountModel accountModel;
     private GiftCertificateModel certificate;
 }

@@ -14,18 +14,18 @@ public class MostWildlyUsedTagRepositoryImpl implements MostWidelyUsedTagReposit
     private EntityManager entityManager;
 
     @Override
-    public MostWidelyUsedTag findMostWidelyUsedTag(Long userId) {
+    public MostWidelyUsedTag findMostWidelyUsedTag(Long accountId) {
         return (MostWidelyUsedTag) entityManager.createNativeQuery(
                 "SELECT tag.id AS tag_id, tag.name AS tag_name , MAX(o.order_cost) AS highest_cost " +
                         "FROM tag " +
                         "JOIN gift_certificate_tag gct ON gct.tag_id = tag.id " +
                         "JOIN orders o ON o.certificate_id = gct.gift_certificate_id " +
-                        "WHERE o.user_id = :userId " +
+                        "WHERE o.account_id = :accountId " +
                         "GROUP BY tag.id " +
                         "ORDER BY COUNT(tag.id) DESC " +
                         "LIMIT 1",
                 "mostWidelyUsedTagMapper")
-                .setParameter("userId", userId)
+                .setParameter("accountId", accountId)
                 .getSingleResult();
     }
 }
