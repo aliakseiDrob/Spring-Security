@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Long save(Purchase purchase) {
         Account account = accountRepository.findById(purchase.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("Account not found", ErrorCode.USER_NOT_FOUND_ERROR.getCode()));
+                .orElseThrow(() -> new EntityNotFoundException("Account not found", ErrorCode.ACCOUNT_NOT_FOUND_ERROR.getCode()));
         GiftCertificate certificate = giftCertificateRepository.findById(purchase.getCertificateId())
                 .orElseThrow(() -> new EntityNotFoundException("Certificate not found",  ErrorCode.CERTIFICATE_NOT_FOUND_ERROR.getCode()));
         Order order = new Order();

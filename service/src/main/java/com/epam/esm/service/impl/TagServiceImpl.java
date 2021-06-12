@@ -3,8 +3,8 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.MostWidelyUsedTag;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.EntityExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
-import com.epam.esm.exception.TagEntityException;
 import com.epam.esm.exception.TagValidationException;
 import com.epam.esm.repository.MostWidelyUsedTagRepository;
 import com.epam.esm.repository.TagRepository;
@@ -13,6 +13,7 @@ import com.epam.esm.validator.TagValidator;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class TagServiceImpl implements TagService {
             return tagRepository.save(tag).getId();
         } catch (
                 DataIntegrityViolationException exception) {
-            throw new TagEntityException("Tag already exists", TAG_EXISTS_ERROR.getCode());
+            throw new EntityExistsException("Tag already exists", TAG_EXISTS_ERROR.getCode());
         }
     }
 
@@ -71,6 +72,10 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public MostWidelyUsedTag getMostWidelyUsedTag(Long userId) {
-        return mostWidelyUsedTagRepository.findMostWidelyUsedTag(userId);
+        try {
+            return mostWidelyUsedTagRepository.findMostWidelyUsedTag(userId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException("most wildly used tag not found", MOST_USED_TAF_NOT_FOUND_ERROR.getCode());
+        }
     }
 }

@@ -1,9 +1,9 @@
 package com.epam.esm.exception;
 
-public class UserEntityException extends RuntimeException {
+public class EntityExistsException extends RuntimeException{
     private final int code;
 
-    public UserEntityException(String message, int code) {
+    public EntityExistsException(String message, int code) {
         super(message);
         this.code = code;
     }

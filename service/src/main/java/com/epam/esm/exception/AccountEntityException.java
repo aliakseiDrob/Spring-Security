@@ -1,9 +1,9 @@
 package com.epam.esm.exception;
 
-public class TagEntityException extends RuntimeException{
+public class AccountEntityException extends RuntimeException {
     private final int code;
 
-    public TagEntityException(String message, int code) {
+    public AccountEntityException(String message, int code) {
         super(message);
         this.code = code;
     }

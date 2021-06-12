@@ -14,16 +14,10 @@ VALUES (1, 1),
        (2, 2),
        (4, 1);
 
-INSERT INTO users (name, password)
-VALUES ('Ivan', 'ivan'),
-       ('Petr', 'petr');
-INSERT INTO ROLES (role)
-VALUES ('ROLE_ADMIN'),
-       ('ROLE_USER');
-insert INTO users_role
-values (1, 1),
-       (2, 2);
+INSERT INTO account (user_id, user_name)
+VALUES ('first', 'Ivan'),
+       ('second', 'Petr');
 
-INSERT INTO `orders` (date, order_cost, user_id, certificate_id)
+INSERT INTO `orders` (date, order_cost, account_id, certificate_id)
 VALUES ('2021-05-24 20:11:10', 340, 1, 1),
        ('2021-05-30 20:11:10', 100, 1, 1);

@@ -35,6 +35,7 @@ public class GiftCertificateController {
     }
 
     @PostMapping
+    @RolesAllowed("ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     public Long save(@RequestBody GiftCertificateDto dto) {
         return service.save(dto);

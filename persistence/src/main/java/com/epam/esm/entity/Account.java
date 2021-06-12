@@ -21,11 +21,17 @@ public class Account implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false)
+    @Column(name = "user_id",nullable = false)
     private String userId;
-    @Column(nullable = false)
+    @Column(name = "user_name",nullable = false)
     private String userName;
     @JsonBackReference
     @OneToMany(mappedBy = "account")
     private Set<Order> orders;
+
+    public Account(long id, String userId, String userName) {
+        this.id = id;
+        this.userId = userId;
+        this.userName = userName;
+    }
 }

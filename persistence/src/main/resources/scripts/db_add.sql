@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`gift_certificate_tag`
 ) ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`account`
 (
-    `id`       BIGINT              NOT NULL AUTO_INCREMENT,
-    `uuid`     VARCHAR(255) unique not null,
+    `id`   BIGINT              NOT NULL AUTO_INCREMENT,
+    `uuid` VARCHAR(255) unique not null,
     primary key (id)
 )
     ENGINE = InnoDB;
@@ -43,10 +43,19 @@ CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`orders`
     `id`             BIGINT        NOT NULL AUTO_INCREMENT,
     `date`           timestamp     NOT NULL,
     `order_cost`     DECIMAL(6, 2) NOT NULL,
-    `account_id`        BIGINT,
+    `account_id`     BIGINT,
     `certificate_id` BIGINT,
     primary key (id),
     FOREIGN KEY (account_id) REFERENCES account (id),
     FOREIGN KEY (certificate_id) references gift_certificate (id)
+)
+    ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`audit`
+(
+    `id`        BIGINT    NOT NULL auto_increment,
+    `operation` varchar(50),
+    `date`      timestamp NOT NULL,
+    `entity`    varchar(500),
+    primary key (id)
 )
     ENGINE = InnoDB;

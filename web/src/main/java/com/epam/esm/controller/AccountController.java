@@ -47,6 +47,8 @@ public class AccountController {
     @GetMapping("{id}")
     @RolesAllowed({"ADMIN", "USER"})
     public AccountModel findById(@PathVariable Long id) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        verifyPrincipleOrAdmin(id, authentication);
         return accountModelAssembler.toModel(accountService.findById(id));
     }
 
@@ -62,6 +64,8 @@ public class AccountController {
     @GetMapping("/{accountId}/orders")
     @RolesAllowed({"ADMIN", "USER"})
     public PagedModel<OrderModel> getUserOrders(@PathVariable Long accountId, Pageable pageable) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        verifyPrincipleOrAdmin(accountId, authentication);
         return orderPagedResourcesAssembler.toModel(orderService.findAllAccountOrders(accountId, pageable),
                 orderModelAssembler);
     }
@@ -70,7 +74,7 @@ public class AccountController {
     @RolesAllowed({"ADMIN", "USER"})
     public OrderDetails getUserOrder(@PathVariable Long accountId, @PathVariable Long orderId) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        verifyPrinciple(accountId, authentication);
+        verifyPrincipleOrAdmin(accountId, authentication);
         return orderService.findUserOrder(accountId, orderId);
     }
 
@@ -93,6 +97,7 @@ public class AccountController {
     private void verifyPrinciple(Long id, Authentication authentication) {
         String userId = authentication.getName();
         Account account = accountService.findById(id);
+
         if (!account.getUserId().equals(userId)) {
             throw new AccessDeniedException("denied in access!");
         }
