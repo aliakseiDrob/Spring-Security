@@ -17,13 +17,12 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation group: 'org.keycloak', name: 'keycloak-admin-client', version: '12.0.4'
     implementation group: 'org.keycloak', name: 'keycloak-spring-boot-starter', version: "${keycloakVersion}"
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.4.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: "${jjwtVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-    implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.13'
-    implementation group: 'org.json', name: 'json', version: '20090211'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: "${modelMapperVersion}"
     compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"

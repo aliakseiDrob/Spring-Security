@@ -56,8 +56,8 @@ public class GlobalExceptionAdviser extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Object> handleBadCredentialsException(Locale locale) {
-        return createResponseEntity(BAD_CREDENTIALS_CODE_ERROR, locale, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> handleBadCredentialsException(AuthenticationException ex,Locale locale) {
+        return createResponseEntity(ex.getCode(), locale, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)

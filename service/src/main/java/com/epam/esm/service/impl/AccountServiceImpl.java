@@ -32,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Long saveAccount(String userId, String userName) {
-        if (!accountRepository.existsByUserId(userId)) {
+        if (accountRepository.existsByUserId(userId)) {
             throw new EntityExistsException("Account already exists", ACCOUNT_EXISTS_ERROR.getCode());
         }
         Account account = new Account(0L, userId, userName);
