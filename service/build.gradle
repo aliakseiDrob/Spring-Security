@@ -19,7 +19,6 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: "${springSecurityCrypto}"
     implementation group: 'org.apache.commons', name: 'commons-text', version: "${apacheCommonTextVersion}"
     implementation group: 'org.modelmapper', name: 'modelmapper', version: "${modelMapperVersion}"
     compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
