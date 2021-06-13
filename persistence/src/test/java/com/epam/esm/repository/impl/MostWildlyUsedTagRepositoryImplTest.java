@@ -7,14 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = TestConfig.class)
-public class MostWidelyUsedYagRepositoryImpl {
+public class MostWildlyUsedTagRepositoryImplTest {
 
-    private static final MostWidelyUsedTag MOST_WIDELY_USED_TAG = new MostWidelyUsedTag(1L, "first", new BigDecimal("340.00"));
+    private static final MostWidelyUsedTag MOST_WIDELY_USED_TAG = new MostWidelyUsedTag(1L, "first",
+            new BigDecimal("340.00"));
 
     @Autowired
     MostWidelyUsedTagRepository mostWidelyUsedTagRepository;
@@ -23,5 +26,10 @@ public class MostWidelyUsedYagRepositoryImpl {
     public void testGetMostWildlyUsedTagShouldReturnMostWildlyUsedTag() {
         //then
         assertEquals(MOST_WIDELY_USED_TAG, mostWidelyUsedTagRepository.findMostWidelyUsedTag(1L));
+    }
+
+    @Test
+    public void testGetMostWildlyUsedTagShouldThrowExceptionIfTagNotExists() {
+        assertThrows(NoResultException.class, () -> mostWidelyUsedTagRepository.findMostWidelyUsedTag(5L));
     }
 }

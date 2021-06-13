@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -23,6 +21,8 @@ import java.util.Map;
 public class GlobalExceptionAdviser extends ResponseEntityExceptionHandler {
 
     private static final int BAD_CREDENTIALS_CODE_ERROR = 40011;
+    private static final int ACCESS_DENID_CODE_ERROR = 40301;
+    private static final int INTERNAL_SERVER_CODE_ERROR = 50001;
     private final ResourceBundleMessageSource messageSource;
 
     @Autowired
@@ -45,29 +45,29 @@ public class GlobalExceptionAdviser extends ResponseEntityExceptionHandler {
         return createResponseEntity(ex.getCode(), locale, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(TagEntityException.class)
-    public ResponseEntity<Object> handleTagEntityException(TagEntityException ex, Locale locale) {
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<Object> handleEntityExistsException(EntityExistsException ex, Locale locale) {
         return createResponseEntity(ex.getCode(), locale, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserEntityException.class)
-    public ResponseEntity<Object> handleUserEntityException(UserEntityException ex, Locale locale) {
+    @ExceptionHandler(AccountEntityException.class)
+    public ResponseEntity<Object> handleUserEntityException(AccountEntityException ex, Locale locale) {
         return createResponseEntity(ex.getCode(), locale, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({BadCredentialsException.class, InternalAuthenticationServiceException.class})
-    public ResponseEntity<Object> handleBadCredentialsException(Locale locale) {
-        return createResponseEntity(BAD_CREDENTIALS_CODE_ERROR, locale, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(AuthenticationException ex,Locale locale) {
+        return createResponseEntity(ex.getCode(), locale, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, Locale locale) {
-        return createResponseEntity(40301, locale, HttpStatus.FORBIDDEN);
+        return createResponseEntity(ACCESS_DENID_CODE_ERROR, locale, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<Object> handleUnregisterException(Exception e, Locale locale) {
-        return createResponseEntity(50001, locale, HttpStatus.INTERNAL_SERVER_ERROR);
+        return createResponseEntity(INTERNAL_SERVER_CODE_ERROR, locale, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private String defineTypeMessage(int code) {

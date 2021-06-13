@@ -3,8 +3,8 @@ package com.epam.esm.servise.impl;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.MostWidelyUsedTag;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.EntityExistsException;
 import com.epam.esm.exception.EntityNotFoundException;
-import com.epam.esm.exception.TagEntityException;
 import com.epam.esm.exception.TagValidationException;
 import com.epam.esm.repository.MostWidelyUsedTagRepository;
 import com.epam.esm.repository.TagRepository;
@@ -116,7 +116,7 @@ public class TagServiceImplTest {
         when(tagRepository.save(any(Tag.class))).thenThrow(new DataIntegrityViolationException(""));
 
         //then
-        assertThrows(TagEntityException.class, () -> service.save(tagDto));
+        assertThrows(EntityExistsException.class, () -> service.save(tagDto));
 
         verify(tagValidator,times(1)).isTagValid(tagDto);
         verify(modelMapper, times(1)).map(tagDto, Tag.class);

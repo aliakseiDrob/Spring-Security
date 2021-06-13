@@ -1,6 +1,6 @@
-CREATE SCHEMA `secure_db_certificates` DEFAULT CHARACTER SET utf8;
+CREATE SCHEMA `db_keycloak_certificates` DEFAULT CHARACTER SET utf8;
 
-CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`gift_certificate`
+CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`gift_certificate`
 (
     `id`               BIGINT        NOT NULL AUTO_INCREMENT,
     `name`             VARCHAR(255)  NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`gift_certificate`
 )
     ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`tag`
+CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`tag`
 (
     `id`   BIGINT              NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) unique NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`tag`
 )
     ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`gift_certificate_tag`
+CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`gift_certificate_tag`
 (
     `gift_certificate_id` BIGINT,
     `tag_id`              BIGINT,
@@ -30,40 +30,32 @@ CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`gift_certificate_tag`
     FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificate (id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`users`
+CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`account`
 (
-    `id`       BIGINT              NOT NULL AUTO_INCREMENT,
-    `name`     VARCHAR(255) unique not null,
-    `password` varchar(255)        not null,
+    `id`   BIGINT              NOT NULL AUTO_INCREMENT,
+    `uuid` VARCHAR(255) unique not null,
     primary key (id)
 )
     ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`roles`
-(
-    `id`   BIGINT NOT NULL auto_increment,
-    `role` enum ('ROLE_ADMIN','ROLE_USER'),
-    primary key (id)
-)
-    ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`users_role`
-(
-    `users_id` BIGINT,
-    `role_id`  BIGINT,
-    primary key (`users_id`, `role_id`),
-    FOREIGN KEY (users_id) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
-) ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `secure_db_certificates`.`orders`
+CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`orders`
 (
     `id`             BIGINT        NOT NULL AUTO_INCREMENT,
     `date`           timestamp     NOT NULL,
     `order_cost`     DECIMAL(6, 2) NOT NULL,
-    `user_id`        BIGINT,
+    `account_id`     BIGINT,
     `certificate_id` BIGINT,
     primary key (id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (account_id) REFERENCES account (id),
     FOREIGN KEY (certificate_id) references gift_certificate (id)
+)
+    ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `db_keycloak_certificates`.`audit`
+(
+    `id`        BIGINT    NOT NULL auto_increment,
+    `operation` varchar(50),
+    `date`      timestamp NOT NULL,
+    `entity`    varchar(500),
+    primary key (id)
 )
     ENGINE = InnoDB;

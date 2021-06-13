@@ -1,9 +1,9 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.config.TestConfig;
+import com.epam.esm.entity.Account;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,45 +27,44 @@ public class OrderRepositoryTest {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final User USER_INSTANCE = new User(1L, "Ivan", "ivan", null, null);
-    private static final List<Order> USER_ORDERS =
+    private static final Account ACCOUNT_INSTANCE = new Account(1L, "first", "Ivan");
+    private static final List<Order> ACCOUNT_ORDERS =
             Arrays.asList(new Order(1L, LocalDateTime.parse("2021-05-24 20:11:10", DATE_TIME_FORMATTER),
-                            new BigDecimal("340.00"), USER_INSTANCE, null),
+                            new BigDecimal("340.00"), ACCOUNT_INSTANCE, null),
                     new Order(2L, LocalDateTime.parse("2021-05-30 20:11:10", DATE_TIME_FORMATTER),
-                            new BigDecimal("100.00"), USER_INSTANCE, null));
+                            new BigDecimal("100.00"), ACCOUNT_INSTANCE, null));
     @Autowired
     OrderRepository orderRepository;
 
     @Test
-    public void testGetAllUserOrdersShouldReturnAllUserOrders() {
+    public void testGetAllAccountOrdersShouldReturnAllAccountOrders() {
         //then
-        assertEquals(new PageImpl<>(USER_ORDERS), orderRepository.findAllByUserId(1L, Pageable.unpaged()));
+        assertEquals(new PageImpl<>(ACCOUNT_ORDERS), orderRepository.findAllByAccountId(1L, Pageable.unpaged()));
     }
 
     @Test
-    public void testGetUserOrderShouldReturnOrder() {
+    public void testGetAccountOrderShouldReturnOrder() {
         //given
-        Optional<Order> expectedOrder = Optional.of(USER_ORDERS.get(0));
+        Optional<Order> expectedOrder = Optional.of(ACCOUNT_ORDERS.get(0));
         //then
-        assertEquals(expectedOrder, orderRepository.findByUserIdAndId(1L, 1L));
+        assertEquals(expectedOrder, orderRepository.findByAccountIdAndId(1L, 1L));
     }
-
 
     @Test
     public void testCreateOrderShouldCreateOrder() {
         //given
-        User user = new User(1L, "Ivan","ivan",null,null);
+        Account user = new Account(1L, "first", "Ivan");
         GiftCertificate giftCertificate = new GiftCertificate(1L, "first", "for men",
-                new BigDecimal("128.01"), 11, 1, LocalDateTime.now(), LocalDateTime.now(),null);
+                new BigDecimal("128.01"), 11, 1, LocalDateTime.now(), LocalDateTime.now(), null);
         Order order = new Order(3L, LocalDateTime.parse("2021-03-24 20:11:10", DATE_TIME_FORMATTER),
-                new BigDecimal("128.01"), user,giftCertificate);
+                new BigDecimal("128.01"), user, giftCertificate);
 
         //then
         Order savedOrder = orderRepository.save(order);
 
-        assertEquals(3L,savedOrder.getId());
-        assertEquals(LocalDateTime.now().format(FORMATTER),savedOrder.getOrderDate().format(FORMATTER));
-        assertEquals(giftCertificate.getPrice(),savedOrder.getOrderCost());
-        assertEquals(user.getId(),savedOrder.getUser().getId());
+        assertEquals(3L, savedOrder.getId());
+        assertEquals(LocalDateTime.now().format(FORMATTER), savedOrder.getOrderDate().format(FORMATTER));
+        assertEquals(giftCertificate.getPrice(), savedOrder.getOrderCost());
+        assertEquals(user.getId(), savedOrder.getAccount().getId());
     }
 }

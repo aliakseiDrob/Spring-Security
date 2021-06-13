@@ -2,13 +2,13 @@ package com.epam.esm.servise.impl;
 
 import com.epam.esm.dto.OrderDetails;
 import com.epam.esm.dto.Purchase;
+import com.epam.esm.entity.Account;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
 import com.epam.esm.exception.EntityNotFoundException;
+import com.epam.esm.repository.AccountRepository;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.OrderRepository;
-import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ public class OrderServiceImplTest {
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final Purchase PURCHASE = new Purchase(1L, 1L);
-    private static final User USER = new User(1L, "first", "password", null, null);
+    private static final Account ACCOUNT = new Account(1L, "first_user_id", "fist");
     private static final GiftCertificate GIFT_CERTIFICATE = new GiftCertificate(1L, "first", "for men",
             new BigDecimal("128.01"), 11, 1,
             null, null, null);
@@ -48,7 +48,7 @@ public class OrderServiceImplTest {
     @Mock
     private OrderRepository orderRepository;
     @Mock
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
     @Mock
     private GiftCertificateRepository giftCertificateRepository;
     @InjectMocks
@@ -57,36 +57,35 @@ public class OrderServiceImplTest {
     @BeforeAll
     public static void init() {
         orders = Arrays.asList(new Order(1L, LocalDateTime.parse("2021-03-21 20:11:10", DATE_TIME_FORMATTER),
-                        new BigDecimal("100"), new User(), new GiftCertificate()),
+                        new BigDecimal("100"), new Account(), new GiftCertificate()),
                 new Order(2L, LocalDateTime.parse("2021-03-21 20:11:10", DATE_TIME_FORMATTER),
-                        new BigDecimal("200"), new User(), new GiftCertificate()));
+                        new BigDecimal("200"), new Account(), new GiftCertificate()));
     }
 
     @Test
     public void testCreateOrderShouldReturnSavedOrderId() {
         //when
         when(orderRepository.save(any(Order.class))).thenReturn(orders.get(0));
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(USER));
+        when(accountRepository.findById(anyLong())).thenReturn(Optional.of(ACCOUNT));
         when(giftCertificateRepository.findById(anyLong())).thenReturn(Optional.of(GIFT_CERTIFICATE));
 
         //then
         assertEquals(1L, service.save(PURCHASE));
 
-        verify(userRepository, times(1)).findById(anyLong());
+        verify(accountRepository, times(1)).findById(anyLong());
         verify(giftCertificateRepository, times(1)).findById(anyLong());
         verify(orderRepository, times(1)).save(any(Order.class));
-
     }
 
     @Test
-    public void testCreateOrderShouldThrowExceptionWhenUserNotExists() {
+    public void testCreateOrderShouldThrowExceptionWhenAccountNotExists() {
         //when
-        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(accountRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         //then
         assertThrows(EntityNotFoundException.class, () -> service.save(PURCHASE));
 
-        verify(userRepository, times(1)).findById(anyLong());
+        verify(accountRepository, times(1)).findById(anyLong());
         verify(giftCertificateRepository, times(0)).findById(anyLong());
         verify(orderRepository, times(0)).save(any(Order.class));
     }
@@ -94,54 +93,54 @@ public class OrderServiceImplTest {
     @Test
     public void testCreateOrderShouldThrowExceptionWhenCertificateNotExists() {
         //when
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(USER));
+        when(accountRepository.findById(anyLong())).thenReturn(Optional.of(ACCOUNT));
         when(giftCertificateRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         //then
         assertThrows(EntityNotFoundException.class, () -> service.save(PURCHASE));
 
-        verify(userRepository, times(1)).findById(anyLong());
+        verify(accountRepository, times(1)).findById(anyLong());
         verify(giftCertificateRepository, times(1)).findById(anyLong());
         verify(orderRepository, times(0)).save(any(Order.class));
     }
 
     @Test
-    public void testFindAllUserOrdersShouldReturnAllUserOrders() {
+    public void testFindAllAccountOrdersShouldReturnAllAccountOrders() {
         //given
         Page<Order> orderPage = new PageImpl<>(orders);
 
         //when
-        when(orderRepository.findAllByUserId(1L, Pageable.unpaged())).thenReturn(orderPage);
+        when(orderRepository.findAllByAccountId(1L, Pageable.unpaged())).thenReturn(orderPage);
 
         //then
-        assertEquals(orderPage, service.findAllUserOrders(1L, Pageable.unpaged()));
+        assertEquals(orderPage, service.findAllAccountOrders(1L, Pageable.unpaged()));
 
-        verify(orderRepository, times(1)).findAllByUserId(anyLong(), any(Pageable.class));
+        verify(orderRepository, times(1)).findAllByAccountId(anyLong(), any(Pageable.class));
     }
 
     @Test
-    public void testFindUserOrderShouldReturnUserOrder() {
+    public void testFindAccountOrderShouldReturnAccountOrder() {
         //given
         OrderDetails orderDetails = new OrderDetails(LocalDateTime.parse("2021-03-21 20:11:10", DATE_TIME_FORMATTER),
                 new BigDecimal("100"));
 
         //when
-        when(orderRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.of(orders.get(0)));
+        when(orderRepository.findByAccountIdAndId(1L, 1L)).thenReturn(Optional.of(orders.get(0)));
 
         //then
         assertEquals(orderDetails, service.findUserOrder(1L, 1L));
 
-        verify(orderRepository, times(1)).findByUserIdAndId(anyLong(), anyLong());
+        verify(orderRepository, times(1)).findByAccountIdAndId(anyLong(), anyLong());
     }
 
     @Test
     public void testFindUserOrderShouldThrowExceptionWhenOrderNotExists() {
         //when
-        when(orderRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.empty());
+        when(orderRepository.findByAccountIdAndId(1L, 1L)).thenReturn(Optional.empty());
 
         //then
         assertThrows(EntityNotFoundException.class, () -> service.findUserOrder(1L, 1L));
 
-        verify(orderRepository, times(1)).findByUserIdAndId(anyLong(), anyLong());
+        verify(orderRepository, times(1)).findByAccountIdAndId(anyLong(), anyLong());
     }
 }

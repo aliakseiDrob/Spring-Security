@@ -32,4 +32,3 @@ public class TagValidatorImplTest {
         assertFalse(tagValidator.isTagValid(TAG_DTO_WITH_LONG_NAME));
     }
 }
-

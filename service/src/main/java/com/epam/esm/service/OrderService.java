@@ -26,7 +26,7 @@ public interface OrderService {
      * @param pageable object for pagination information
      * @return a sublist Orders
      */
-    Page<Order> findAllUserOrders(Long userId, Pageable pageable);
+    Page<Order> findAllAccountOrders(Long userId, Pageable pageable);
 
     /**
      * finds sublist User's Order by User id and Order id

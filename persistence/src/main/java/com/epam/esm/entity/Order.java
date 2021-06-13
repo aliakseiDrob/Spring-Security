@@ -26,8 +26,8 @@ public class Order implements Serializable {
     @Column(name = "order_cost", updatable = false)
     private BigDecimal orderCost;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
     @ManyToOne
     @JoinColumn(name = "certificate_id", nullable = false)
     private GiftCertificate certificate;

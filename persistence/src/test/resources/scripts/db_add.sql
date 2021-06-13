@@ -34,27 +34,12 @@ CREATE TABLE gift_certificate_tag
     FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificate (id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE
 );
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS `account`
 (
-    `id`       BIGINT             NOT NULL AUTO_INCREMENT,
-    `name`     VARCHAR(45) unique not null,
-    `password` varchar(255)       not null,
+    `id`        BIGINT              NOT NULL AUTO_INCREMENT,
+    `user_id`   VARCHAR(255) unique not null,
+    `user_name` VARCHAR(255)        not null,
     primary key (id)
-);
-
-CREATE TABLE IF NOT EXISTS `roles`
-(
-    `id`   BIGINT NOT NULL auto_increment,
-    `role` enum ('ROLE_ADMIN','ROLE_USER'),
-    primary key (id)
-);
-CREATE TABLE IF NOT EXISTS `users_role`
-(
-    `users_id` BIGINT,
-    `role_id`  BIGINT,
-    primary key (`users_id`, `role_id`),
-    FOREIGN KEY (users_id) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `orders`
@@ -62,10 +47,10 @@ CREATE TABLE IF NOT EXISTS `orders`
     `id`             BIGINT        NOT NULL AUTO_INCREMENT,
     `date`           timestamp     NOT NULL,
     `order_cost`     DECIMAL(6, 2) NOT NULL,
-    `user_id`        BIGINT,
+    `account_id`     BIGINT,
     `certificate_id` BIGINT,
     primary key (id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (account_id) REFERENCES account (id),
     FOREIGN KEY (certificate_id) references gift_certificate (id)
 );
 CREATE TABLE IF NOT EXISTS `audit`

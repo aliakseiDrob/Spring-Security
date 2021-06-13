@@ -15,18 +15,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     /**
      * finds sublist orders by user id
      *
-     * @param userId user's id
+     * @param accountId account's id
      * @param pageable object for pagination information
      * @return A sublist of a list of objects
      */
-    Page<Order> findAllByUserId(Long userId, Pageable pageable);
+    Page<Order> findAllByAccountId(Long accountId, Pageable pageable);
 
     /**
      * finds order by id and order id
      *
-     * @param userId User's id
+     * @param accountId Accounts's id
      * @param orderId Order's id
      * @return Optional Order can be null
      */
-    Optional<Order> findByUserIdAndId(Long userId, Long orderId);
+    Optional<Order> findByAccountIdAndId(Long accountId, Long orderId);
 }

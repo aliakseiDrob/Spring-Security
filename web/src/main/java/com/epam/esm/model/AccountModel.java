@@ -13,8 +13,9 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 
-public class UserModel extends RepresentationModel<UserModel> {
+public class AccountModel extends RepresentationModel<AccountModel> {
 
     private Long id;
-    private String name;
+    private String userId;
+    private String userName;
    }
